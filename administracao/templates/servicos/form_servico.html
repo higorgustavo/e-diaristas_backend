@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block title %} Formulário de Serviço {% endblock %}
+
+{% block content %}
+<div class="card card-primary">
+    <div class="card-header">
+        <div class="card-title">
+            {% if request.resolver_match.url_name == 'cadastrar-servico' %}
+                Cadastro de serviço
+            {% else %}
+                Edição de serviço
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            {% bootstrap_form form_servico %}
+            <button class="btn btn-primary" type="submit">Salvar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
