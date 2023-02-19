@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import validate_image_file_extension
 from localflavor.br.models import BRCPFField
+from .managers import diarista_manager
+from django.contrib.auth.models import UserManager
 
 
 def nome_arquivo_documento(instance, filename):
@@ -19,9 +21,10 @@ def nome_arquivo_foto(instance, filename):
 
 class Usuario(AbstractUser):
     TIPO_USUARIO_CHOICES = (
-        (1, "CLiente"),
+        (1, "Cliente"),
         (2, "Diarista")
     )
+    username = None
     nome_completo = models.CharField(max_length=255, null=True, blank=False)
     cpf = BRCPFField(unique=True, null=True, blank=False)
     nascimento = models.DateField(null=True, blank=False)
@@ -35,6 +38,10 @@ class Usuario(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('nome_completo', 'cpf', 'nascimento', 'telefone', 'tipo_usuario', 'reputacao', 'chave_pix', 'foto_documento', 'foto_documento')
+
+    object = UserManager()
+
+    diarista_objects = diarista_manager.DiaristaManager()
 
 
 class CidadesAtendimento(models.Model):

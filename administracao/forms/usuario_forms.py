@@ -6,7 +6,7 @@ from django.db.models import fields
 class CadastroUsuarioForm(UserCreationForm):
     class Meta:
         model = get_user_model()
-        fields = ['username', 'first_name', 'email', 'password1', 'password2']
+        fields = ['first_name', 'email', 'password1', 'password2']
 
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)
@@ -22,4 +22,4 @@ class EditarUsuarioForm(UserChangeForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'first_name', 'email']
+        fields = ['first_name', 'email']

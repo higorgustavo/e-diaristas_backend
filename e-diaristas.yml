@@ -1,0 +1,488 @@
+openapi: 3.0.1
+info:
+    title: E-diaristas
+    description: API back-end da aplicação E-diaristas
+    version: 1.0.0
+    contact:
+        name: Higor Gustavo
+        url: https://higorgustavo.com.br
+        email: higor.gustavo.lp@gmail.com
+servers:
+    - url: http://localhost:8000
+      description: Aplicação Django local
+    - url: https://ediaristas-api-python.herokuapp.com
+      description: Aplicação Django Heroku
+tags:
+    - name: Me
+    - name: Api
+    - name: Auth
+    - name: Usuários
+    - name: Diaristas
+    - name: Enderecos
+paths:
+    /api:
+        get:
+            operationId: getLinks
+            tags:
+                - Api
+            description: Exibe os links iniciais da API
+            responses:
+                "200":
+                    description: Exibição realizada com sucesso
+                    content:
+                        "application/json":
+                            schema:
+                                type: object
+                                properties:                                  
+                                    links:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/LinkResponse"
+    /api/diaristas/localidades:
+        get:
+            operationId: getDiaristasLocalidades
+            tags:
+                - Diaristas
+            description: Buscar diaristas que atendam em determinada localidade
+            parameters:
+                - name: cep
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                  example: "56895000"
+            responses:
+                "200":
+                    description: Busca realizada com sucesso
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/DiaristaLocalidadePagedResponse"
+                "400":
+                    description: CEP não foi informado ou é inválido
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "404":
+                    description: CEP informado não foi encontrado
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+    /api/diaristas/disponibilidade:
+        get:
+            operationId: getDisponibilidade
+            tags:
+                - Diaristas
+            description: Verificar a disponibilidade de diáristas por localidade
+            parameters:
+                - name: cep
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                  example: "56895000"
+            responses:
+                "200":
+                    description: Verificação realizada com sucesso
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/DisponibilidadeResponse"
+                "400":
+                    description: CEP não foi informado ou é inválido
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "404":
+                    description: CEP informado não foi encontrado
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+    /api/enderecos:
+        get:
+            operationId: getEndereco
+            tags:
+                - Enderecos
+            description: Buscar dados de um endereço por CEP
+            parameters:
+                - name: cep
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                  example: "56895000"
+            responses:
+                "200":
+                    description: Busca realizada com sucesso
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/EnderecoResponse"
+                "400":
+                    description: CEP não foi informado ou é inválido
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "404":
+                    description: CEP informado não foi encontrado
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+    /api/usuarios:
+        post: 
+            operationId: postUsuario
+            tags:
+                - Usuários
+            description: cadastrar um novo usuários
+            requestBody:
+                content:
+                    'multipart/form-data':
+                        schema:
+                            $ref: "#/components/schemas/CreateUsuarioRequest"
+            responses:
+                '201':
+                    description: Usuário cadastrado com sucesso
+                    content:
+                        'application/json':
+                            schema:
+                                $ref: '#/components/schemas/CreateUsuarioResponse'
+                '400':
+                    description: Houveram erros de validação
+                    content: 
+                        'application/json':
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+    /auth/token/:
+        post:
+            operationId: token
+            tags:
+                - Auth 
+            description: Autenticar com as credencias do usuário
+            requestBody:
+                content:
+                    "application/json":
+                        schema:
+                            $ref: "#/components/schemas/CredentialRequest"
+            responses:
+                '200':
+                    description: Autenticação realizada com sucesso
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/TokenResponse"
+                '400':
+                        description: Houveram erros de validação
+                        content:
+                            "application/json":
+                                schema:
+                                    $ref: "#/components/schemas/ErrorResponse"
+                '401':
+                    description: Credenciais incorretas
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+    /auth/token/refresh/:
+        post:
+            operationId: refresh
+            tags:
+                - Auth
+            description: Autenticar com refresh token
+            requestBody:
+                content:
+                    "application/json":
+                        schema:
+                            $ref: "#/components/schemas/RefreshRequest"
+            responses:
+                '200':
+                    description: Autenticação realizada com sucesso
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/TokenResponse"
+                '400':
+                        description: Houveram erros de validação
+                        content:
+                            "application/json":
+                                schema:
+                                    $ref: "#/components/schemas/ErrorResponse"
+                '401':
+                    description: Refresh token inválido 
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+    /auth/logout/:
+        post:
+            operationId: logout
+            tags:
+                - Auth
+            description: Realizar logoutao inválidar o refresh token
+            requestBody:
+                content:
+                    "application/json":
+                        schema:
+                            $ref: "#/components/schemas/RefreshRequest"
+            responses:
+                '205':
+                    description: Logout realizado com sucesso
+                '400':
+                    description: Houveram erros de validação
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+    /api/me:
+        get:
+            operationId: getMe
+            tags:
+                - Me
+            description: Obter os dados do usuário logado
+            responses:
+                '200':
+                    description: Usuário logado obtido com sucesso
+                    content:
+                        "application/json":
+                            schema: 
+                                $ref: "#/components/schemas/MeResponse"
+                '400':
+                    description: Usuário não está autenticado
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+            security:
+              - JWT: []
+            
+
+components:
+    schemas:
+        DiaristaLocalidadePagedResponse:
+            type: object
+            properties:
+                diaristas:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/DiaristaLocalidadeResponse"
+                quantidade_diaristas:
+                    type: integer
+        DiaristaLocalidadeResponse:
+            type: object
+            properties:
+                nome_completo:
+                    type: string
+                reputacao:
+                    type: number
+                    format: double
+                foto_usuario:
+                    type: string
+                    format: url
+                cidade:
+                    type: string
+        ErrorResponse:
+            type: object
+            properties:
+                status:
+                    type: integer
+                timestamp:
+                    type: string
+                    format: date-time
+                message:
+                    type: string
+                erros:
+                    type: object
+                    additionalProperties:
+                        type: array
+                        items:
+                            type: string
+        EnderecoResponse:
+            type: object
+            properties:
+                cep:
+                    type: string
+                logradouro:
+                    type: string
+                complemento:
+                    type: string
+                bairro:
+                    type: string
+                localidade:
+                    type: string
+                uf:
+                    type: string
+                ibge:
+                    type: string
+        DisponibilidadeResponse:
+            type: object
+            properties:
+                disponibilidade:
+                    type: boolean
+        LinkResponse:
+            type: object
+            properties:
+                type:
+                    type: string
+                    enum:
+                        - GET
+                        - POST
+                        - PUT
+                        - PATCH
+                        - DELETE
+                rel:
+                    type: string
+                uri:
+                    type: string
+                    format: uri
+        CreateUsuarioRequest:
+            type: object
+            required:
+                - nome_completo
+                - email
+                - password
+                - password_confirmation
+                - tipo_usuario
+                - cpf
+                - nascimento
+                - telefone
+                - foto_documento
+                - foto_usuario
+            properties:
+                nome_completo:
+                    type: string
+                    minLength: 3
+                    maxLength: 255
+                email:
+                    type: string
+                    format: email
+                    maxLength: 255
+                password:
+                    type: string
+                    format: password
+                password_confirmation:
+                    type: string
+                    format: password
+                tipo_usuario:
+                    type: integer
+                    enum:
+                        - 1
+                        - 2
+                cpf:
+                    type: string
+                    minLength: 11
+                    maxLength: 11
+                nascimento:
+                    type: string
+                    format: date
+                telefone:
+                    type: string
+                    minLength: 11
+                    maxLength: 11
+                foto_documento:
+                    type: string
+                    format: binary
+                chave_pix:
+                    minLength: 11
+                    maxLength: 255
+        CreateUsuarioResponse:
+            type: object
+            properties:
+                id:
+                    type: integer
+                nome_completo:
+                    type: string
+                email:
+                    type: string
+                    format: email
+                tipo_usuario:
+                    type: integer
+                    enum:
+                        - 1
+                        - 2
+                cpf:
+                    type: string
+                nascimento:
+                    type: string
+                    format: date
+                telefone:
+                    type: string
+                foto_usuario:
+                    type: string
+                    format: uri
+                chave_pix:
+                    type: string
+                token:
+                    $ref: "#/components/schemas/TokenResponse"
+                links: 
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/LinkResponse"
+        TokenResponse:
+            type: object
+            properties:
+                access:
+                    type: string
+                refresh:
+                    type: string
+        CredentialRequest:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+                email:
+                    type: string
+                    format: email
+                password:
+                    type: string
+                    format: password
+        RefreshRequest:
+            type: object
+            required:
+              - refresh
+            properties:
+                refresh:
+                    type: string
+        MeResponse:
+            type: object
+            properties:
+                id:
+                    type: integer
+                nome_completo:
+                    type: string
+                email:
+                    type: string
+                    format: email
+                tipo_usuario:
+                    type: integer
+                    enum:
+                        - 1
+                        - 2
+                cpf:
+                    type: string
+                nascimento:
+                    type: string
+                    format: date
+                telefone:
+                    type: string
+                foto_usuario:
+                    type: string
+                    format: uri
+                chave_pix:
+                    type: string
+                links: 
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/LinkResponse"
+
+    securitySchemes:
+        JWT:
+            type: http
+            scheme: bearer
+
+
