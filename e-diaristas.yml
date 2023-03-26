@@ -34,7 +34,7 @@ paths:
                         "application/json":
                             schema:
                                 type: object
-                                properties:                                  
+                                properties:
                                     links:
                                         type: array
                                         items:
@@ -136,34 +136,34 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/ErrorResponse"
     /api/usuarios:
-        post: 
+        post:
             operationId: postUsuario
             tags:
                 - Usuários
             description: cadastrar um novo usuários
             requestBody:
                 content:
-                    'multipart/form-data':
+                    "multipart/form-data":
                         schema:
                             $ref: "#/components/schemas/CreateUsuarioRequest"
             responses:
-                '201':
+                "201":
                     description: Usuário cadastrado com sucesso
                     content:
-                        'application/json':
+                        "application/json":
                             schema:
-                                $ref: '#/components/schemas/CreateUsuarioResponse'
-                '400':
+                                $ref: "#/components/schemas/CreateUsuarioResponse"
+                "400":
                     description: Houveram erros de validação
-                    content: 
-                        'application/json':
+                    content:
+                        "application/json":
                             schema:
-                                $ref: '#/components/schemas/ErrorResponse'
+                                $ref: "#/components/schemas/ErrorResponse"
     /auth/token/:
         post:
             operationId: token
             tags:
-                - Auth 
+                - Auth
             description: Autenticar com as credencias do usuário
             requestBody:
                 content:
@@ -171,19 +171,19 @@ paths:
                         schema:
                             $ref: "#/components/schemas/CredentialRequest"
             responses:
-                '200':
+                "200":
                     description: Autenticação realizada com sucesso
                     content:
                         "application/json":
                             schema:
                                 $ref: "#/components/schemas/TokenResponse"
-                '400':
-                        description: Houveram erros de validação
-                        content:
-                            "application/json":
-                                schema:
-                                    $ref: "#/components/schemas/ErrorResponse"
-                '401':
+                "400":
+                    description: Houveram erros de validação
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "401":
                     description: Credenciais incorretas
                     content:
                         "application/json":
@@ -201,20 +201,20 @@ paths:
                         schema:
                             $ref: "#/components/schemas/RefreshRequest"
             responses:
-                '200':
+                "200":
                     description: Autenticação realizada com sucesso
                     content:
                         "application/json":
                             schema:
                                 $ref: "#/components/schemas/TokenResponse"
-                '400':
-                        description: Houveram erros de validação
-                        content:
-                            "application/json":
-                                schema:
-                                    $ref: "#/components/schemas/ErrorResponse"
-                '401':
-                    description: Refresh token inválido 
+                "400":
+                    description: Houveram erros de validação
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "401":
+                    description: Refresh token inválido
                     content:
                         "application/json":
                             schema:
@@ -231,9 +231,9 @@ paths:
                         schema:
                             $ref: "#/components/schemas/RefreshRequest"
             responses:
-                '205':
+                "205":
                     description: Logout realizado com sucesso
-                '400':
+                "400":
                     description: Houveram erros de validação
                     content:
                         "application/json":
@@ -246,25 +246,25 @@ paths:
                 - Me
             description: Obter os dados do usuário logado
             responses:
-                '200':
+                "200":
                     description: Usuário logado obtido com sucesso
                     content:
                         "application/json":
-                            schema: 
+                            schema:
                                 $ref: "#/components/schemas/MeResponse"
-                '400':
+                "400":
                     description: Usuário não está autenticado
                     content:
                         "application/json":
                             schema:
                                 $ref: "#/components/schemas/ErrorResponse"
             security:
-              - JWT: []
+                - JWT: []
     /api/diarias:
         post:
             operationId: postDiaria
             tags:
-              - Diárias
+                - Diárias
             description: Cadastrar nova diária
             requestBody:
                 content:
@@ -272,26 +272,78 @@ paths:
                         schema:
                             $ref: "#/components/schemas/DiariaRequest"
             responses:
-                '201':
+                "201":
                     description: Diária cadastrada com sucesso
                     content:
                         "application/json":
                             schema:
                                 $ref: "#/components/schemas/DiariaResponse"
-                '400':
+                "400":
                     description: Houveram erros de validação
                     content:
                         "application/json":
                             schema:
                                 $ref: "#/components/schemas/ErrorResponse"
-                '401':
+                "401":
                     description: Usuário não está autenticado
                     content:
                         "application/json":
                             schema:
                                 $ref: "#/components/schemas/ErrorResponse"
-                '403':
+                "403":
                     description: Usuário autenticado não tem acesso para realizar operação
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+            security:
+                - JWT: []
+    /api/diarias/{diariaId}/pagamentos:
+        post:
+            operationId: pagarDiaria
+            tags:
+                - Diárias
+            description: Realizar o pagamento de uma diária
+            parameters:
+                - name: diariaId
+                  in: path
+                  description: ID da diária a ser paga
+                  required: true
+                  schema:
+                      type: integer
+                  example: 1
+            requestBody:
+                content:
+                    "application/json":
+                        schema:
+                            $ref: "#/components/schemas/PagamentosRequest"
+            responses:
+                "200":
+                    description: Pagamento realizado com sucesso
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/MessageResponse"
+                "400":
+                    description: Houveram erros de validação
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "401":
+                    description: Usuário não está autenticado
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "403":
+                    description: Usuário autenticado não tem acesso para realizar operação
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "404":
+                    description: Diária não encontrada
                     content:
                         "application/json":
                             schema:
@@ -456,7 +508,7 @@ components:
                     type: string
                 token:
                     $ref: "#/components/schemas/TokenResponse"
-                links: 
+                links:
                     type: array
                     items:
                         $ref: "#/components/schemas/LinkResponse"
@@ -470,8 +522,8 @@ components:
         CredentialRequest:
             type: object
             required:
-              - email
-              - password
+                - email
+                - password
             properties:
                 email:
                     type: string
@@ -482,7 +534,7 @@ components:
         RefreshRequest:
             type: object
             required:
-              - refresh
+                - refresh
             properties:
                 refresh:
                     type: string
@@ -513,7 +565,7 @@ components:
                     format: uri
                 chave_pix:
                     type: string
-                links: 
+                links:
                     type: array
                     items:
                         $ref: "#/components/schemas/LinkResponse"
@@ -583,20 +635,20 @@ components:
                 status:
                     type: integer
                     enum:
-                      - 1
-                      - 2
-                      - 3
-                      - 4
-                      - 5
-                      - 6
-                      - 7
+                        - 1
+                        - 2
+                        - 3
+                        - 4
+                        - 5
+                        - 6
+                        - 7
                 motivo_cancelamento:
                     type: string
                 # nome_servico:
                 #     type: string
                 create_at:
                     type: string
-                    format: date-time    
+                    format: date-time
                 update_at:
                     type: string
                     format: date-time
@@ -640,12 +692,12 @@ components:
                     type: integer
                 cliente:
                     $ref: "#/components/schemas/UsuarioDiariaRequest"
-                diarista: 
+                diarista:
                     $ref: "#/components/schemas/UsuarioDiariaRequest"
                 links:
                     type: array
                     items:
-                        $ref: "#/components/schemas/LinkResponse"  
+                        $ref: "#/components/schemas/LinkResponse"
         UsuarioDiariaRequest:
             type: object
             properties:
@@ -664,15 +716,25 @@ components:
                 tipo_usuario:
                     type: integer
                     enum:
-                      - 1
-                      - 2
+                        - 1
+                        - 2
                 reputacao:
                     type: number
                     format: double
+        PagamentosRequest:
+            type: object
+            required:
+                - card_hash
+            properties:
+                card_hash:
+                    type: string
+        MessageResponse:
+            type: object
+            properties:
+                message:
+                    type: string
 
     securitySchemes:
         JWT:
             type: http
             scheme: bearer
-
-
