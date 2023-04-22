@@ -41,13 +41,14 @@ class UsuarioSerializer(serializers.ModelSerializer):
         tokens = RefreshToken.for_user(user)
         data ={
             "refresh": str(tokens),
-            "access": str(tokens.access_token)
+	        "access": str(tokens.access_token)
         }
         return data
     
     def get_links(self, user):
         usuario = usuario_service.listar_usuario_email(user.email)
         links = Hateoas()
+        links.add_get('lista_diariaras', reverse('diaria-list'))
         if usuario.tipo_usuario == 1:
             links.add_post('cadastrar_diaria', reverse('diaria-list'))
         return links.to_array()

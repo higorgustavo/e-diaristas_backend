@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.urls import reverse
+from django.utils import timezone
 from ..models import Diaria, Usuario
 from administracao.services import servico_service
 from ..services.cidades_atendimento_service import verificar_disponibilidade_cidade, buscar_cidade_ibge
@@ -32,6 +33,11 @@ class DiariaSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if not verificar_disponibilidade_cidade(attrs["cep"]):
             raise serializers.ValidationError("Não há diaristas para o CEP informado")
+        qtd_comodos = attrs["quantidade_quartos"] + attrs["quantidade_salas"] + \
+            attrs["quantidade_cozinhas"] + attrs["quantidade_banheiros"] + attrs["quantidade_quartos"] + \
+            attrs["quantidade_quintais"] + attrs["quantidade_outros"]   
+        if qtd_comodos == 0:
+            raise serializers.ValidationError("A diária deve ter, ao menos, 1 cômodo")
         return attrs
     
     def validate_codigo_ibge(self, codigo_ibge):
@@ -75,6 +81,10 @@ class DiariaSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Horário de início não pode ser menor que 6")
         if (data_atendimento.hour + self.initial_data["tempo_atendimento"]) > 22:
             raise serializers.ValidationError("Horário de atendimento não pode passar das 22:00")
+        if data_atendimento <= (timezone.now() + timezone.timedelta(hours=48)):
+            raise serializers.ValidationError("A data de atendimento não pode ser menor que 48h antes da data atual")
+        
+
         return data_atendimento
     
     def get_links(self, obj):
@@ -83,4 +93,6 @@ class DiariaSerializer(serializers.ModelSerializer):
         if obj.status == 1:
             if usuario.tipo_usuario == 1:
                 links.add_post('pagar_diaria', reverse('pagamento-diaria-list', kwargs={'diaria_id': obj.id}))
+        else:
+            links.add_get('self', reverse('diaria-detail', kwargs={'diaria_id': obj.id}))
         return links.to_array()
