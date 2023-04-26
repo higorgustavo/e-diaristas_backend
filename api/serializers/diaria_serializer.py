@@ -16,7 +16,7 @@ class UsuarioDiariaSerializer(serializers.ModelSerializer):
 class DiariaSerializer(serializers.ModelSerializer):
     cliente = UsuarioDiariaSerializer(read_only=True)
     valor_comissao = serializers.DecimalField(read_only=True, max_digits=5, decimal_places=2)
-    nome_servico = serializers.CharField(read_only=True)
+    nome_servico = serializers.SerializerMethodField()
     links = serializers.SerializerMethodField(required=False)
 
     class Meta:
@@ -26,10 +26,13 @@ class DiariaSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         servico = servico_service.listar_servico_id(validated_data["servico"].id)
         valor_comissao = validated_data["preco"] * (servico.porcentagem_comissao/100)
-        diaria = Diaria.objects.create(valor_comissao=valor_comissao, nome_servico=servico.nome,
+        diaria = Diaria.objects.create(valor_comissao=valor_comissao,
                                        cliente_id=self.context['request'].user.id, **validated_data
                                        )
         return diaria
+    
+    def get_nome_servico(self, obj):
+        return obj.servico.nome
     
     def validate(self, attrs):
         if not verificar_disponibilidade_cidade(attrs["cep"]):
