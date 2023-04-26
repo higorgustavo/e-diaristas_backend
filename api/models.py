@@ -61,6 +61,7 @@ class Diaria(models.Model):
     status = models.IntegerField(choices=STATUS_DIARIA_CHOICES, null=False, blank=False, default=1)
     preco = models.DecimalField(null=False, blank=False, decimal_places=2, max_digits=5)
     valor_comissao = models.DecimalField(null=False, blank=False, decimal_places=2, max_digits=5)
+    nome_servico = models.CharField(max_length=50, null=False, blank=False)
     logradouro = models.CharField(max_length=60, null=False, blank=False)
     numero = models.CharField(max_length=10, null=False, blank=False)
     bairro = models.CharField(max_length=30, null=False, blank=False)
