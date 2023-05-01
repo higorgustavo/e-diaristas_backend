@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (diaristas_localidade_view, endereco_cep_view,
-                    disponibilidade_atendimento_cidade, servico_view, inicio_view, usuario_view, me_view, diaria_view, pagamento_diaria_view)
+                    disponibilidade_atendimento_cidade, servico_view, inicio_view, usuario_view, me_view, diaria_view, pagamento_diaria_view, endereco_diarista_view, cidades_atendimento_diarista_view)
 
 urlpatterns = [
      path('', inicio_view.Inicio.as_view(), name='inicio'),
@@ -15,11 +15,18 @@ urlpatterns = [
 
      path('usuarios', usuario_view.Usuario.as_view(), name='usuario-list'),
 
+     path('usuarios/enderecos', endereco_diarista_view.EnderecoDiarista.as_view(),
+          name='endereco-diarista-detail'),
+
      path('me', me_view.Me.as_view(), name='me-list'),
 
      path('diarias', diaria_view.Diaria.as_view(), name='diaria-list'),
 
-     path('diarias/<int:diaria_id>', diaria_view.DiariaId.as_view(), name='diaria-detail'),
+     path('diarias/<int:diaria_id>', diaria_view.DiariaID.as_view(), name='diaria-detail'),
 
      path('diarias/<int:diaria_id>/pagamentos', pagamento_diaria_view.PagamentoDiaria.as_view(), name='pagamento-diaria-list'),
+
+     path('usuarios/cidades-atendidas', 
+          cidades_atendimento_diarista_view.CidadesAtendimentoDiaristaID.as_view(),
+          name='cidades-atendimento-diarista-detail'),
 ]

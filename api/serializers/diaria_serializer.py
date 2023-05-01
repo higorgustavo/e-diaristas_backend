@@ -34,7 +34,7 @@ class DiariaSerializer(serializers.ModelSerializer):
     def get_nome_servico(self, obj):
         return obj.servico.nome
     
-    def validate(self, attrs):
+    def validate(self, attrs): 
         if not verificar_disponibilidade_cidade(attrs["cep"]):
             raise serializers.ValidationError("Não há diaristas para o CEP informado")
         qtd_comodos = attrs["quantidade_quartos"] + attrs["quantidade_salas"] + \

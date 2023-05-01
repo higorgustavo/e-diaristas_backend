@@ -26,7 +26,7 @@ class Diaria(APIView):
         return Response(serializer_diaria.errors, status=status_http.HTTP_400_BAD_REQUEST)
 
 
-class DiariaId(APIView):
+class DiariaID(APIView):
     permission_classes = [dono_permission.DonoPermission, ]
 
     def get(self, request, diaria_id, format=None):
