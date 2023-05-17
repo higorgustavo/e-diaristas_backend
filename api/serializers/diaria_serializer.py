@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.urls import reverse
-from django.utils import timezone
+from datetime import datetime, tzinfo
 from ..models import Diaria, Usuario
 from administracao.services import servico_service
 from ..services.cidades_atendimento_service import verificar_disponibilidade_cidade, buscar_cidade_ibge
@@ -94,6 +94,7 @@ class DiariaSerializer(serializers.ModelSerializer):
     def get_links(self, obj):
         usuario = self.context['request'].user
         links = Hateoas()
+        data_atual = datetime.now()
         if obj.status == 1:
             if usuario.tipo_usuario == 1:
                 links.add_post('pagar_diaria', reverse('pagamento-diaria-list', kwargs={'diaria_id': obj.id}))
@@ -102,6 +103,14 @@ class DiariaSerializer(serializers.ModelSerializer):
             if usuario.tipo_usuario == 2:
                 links.add_post('candidatar_diaria', reverse('candidatar-diarista-diaria-list', 
                                                             kwargs={'diaria_id': obj.id}))
+        elif obj.status == 3:
+            links.add_get('self', reverse('diaria-detail', kwargs={'diaria_id': obj.id}))
+            if usuario.tipo_usuario == 1:
+                data_atendimento = obj.data_atendimento.replace(tzinfo=None)
+                if data_atual >= data_atendimento:
+                    links.add_patch('confirmar_diarista', 
+                                    reverse('confirmar-presenca-diaria-detail', 
+                                            kwargs={'diaria_id': obj.id}))
         else:
             links.add_get('self', reverse('diaria-detail', kwargs={'diaria_id': obj.id}))
         return links.to_array()
