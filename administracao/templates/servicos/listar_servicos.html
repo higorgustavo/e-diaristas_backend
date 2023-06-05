@@ -22,7 +22,7 @@
                         <td>{{ servico.nome }}</td>
                         <td>{{ servico.valor_minimo }}</td>
                         <td>
-                            <a href="{% url 'editar-servico' servico.id %}">Editar</a>
+                            <a href="{% url 'editar_servico' servico.id %}">Editar</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -30,5 +30,5 @@
         </table>
     </div>
 </div>
-<a href="{% url 'cadastrar-servico' %}" class="btn btn-primary">Cadastrar Serviço</a>
+<a href="{% url 'cadastrar_servico' %}" class="btn btn-primary">Cadastrar Serviço</a>
 {% endblock %}    

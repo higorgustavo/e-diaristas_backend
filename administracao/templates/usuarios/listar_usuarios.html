@@ -20,7 +20,7 @@
                     <tr>
                         <td>{{ usuario.username }}</td>
                         <td>
-                            <a href="{% url 'editar-usuario' usuario.id %}">Editar</a>
+                            <a href="{% url 'editar_usuario' usuario.id %}">Editar</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -28,5 +28,5 @@
         </table>
     </div>
 </div>
-<a href="{% url 'cadastrar-usuario' %}" class="btn btn-primary">Cadastrar Usuário</a>
+<a href="{% url 'cadastrar_usuario' %}" class="btn btn-primary">Cadastrar Usuário</a>
 {% endblock %}    

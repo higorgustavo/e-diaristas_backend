@@ -169,7 +169,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'America/Recife'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -183,11 +183,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = 'listar-servicos'
+LOGIN_REDIRECT_URL = 'listar_servicos'
 
-LOGOUT_REDIRECT_URL = 'logar-usuario'
+LOGOUT_REDIRECT_URL = 'logar_usuario'
 
-LOGIN_URL = 'logar-usuario'
+LOGIN_URL = 'logar_usuario'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
