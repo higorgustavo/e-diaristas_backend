@@ -43,6 +43,6 @@ def nova_oportunidade(sender, instance, **kwargs):
         send_mail(assunto, corpo_email, email_remetente, lista_email, 
         html_message=html_message_diarista)
 
-post_save.connect(usuario_cadastrado, sender=Usuario)
-post_save.connect(diarista_selecionada, sender=Diaria)
-post_save.connect(nova_oportunidade, sender=Diaria)
+# post_save.connect(usuario_cadastrado, sender=Usuario)
+# post_save.connect(diarista_selecionada, sender=Diaria)
+# post_save.connect(nova_oportunidade, sender=Diaria)

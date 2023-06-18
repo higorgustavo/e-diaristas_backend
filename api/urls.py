@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (diaristas_localidade_view, endereco_cep_view,
-                    disponibilidade_atendimento_cidade, servico_view, inicio_view, usuario_view, me_view, diaria_view, pagamento_diaria_view, endereco_diarista_view, cidades_atendimento_diarista_view, oportunidade_view, candidatar_diarista_diaria_view, confirmar_presenca_diarista_view, avaliacao_diaria_view)
+                    disponibilidade_atendimento_cidade, servico_view, inicio_view, usuario_view, me_view, diaria_view, pagamento_diaria_view, endereco_diarista_view, cidades_atendimento_diarista_view, oportunidade_view, candidatar_diarista_diaria_view, confirmar_presenca_diarista_view, avaliacao_diaria_view, cancelar_diaria_view)
 
 urlpatterns = [
      path('', inicio_view.Inicio.as_view(), name='inicio'),
@@ -30,7 +30,7 @@ urlpatterns = [
      path('diarias/<int:diaria_id>/candidatar', candidatar_diarista_diaria_view.CandidatarDiaristaDiaria.as_view(), 
           name='candidatar-diarista-diaria-list'),
 
-     path('diarias/<int:diaria_id>/pagamentos', pagamento_diaria_view.PagamentoDiaria.as_view(), 
+     path('diarias/<int:diaria_id>/pagar', pagamento_diaria_view.PagamentoDiaria.as_view(), 
           name='pagamento-diaria-list'),
 
      path('diarias/<int:diaria_id>/confirmar-presenca', 
@@ -39,6 +39,9 @@ urlpatterns = [
      
      path('diarias/<int:diaria_id>/avaliacao', avaliacao_diaria_view.AvaliacaoDiariaID.as_view(), 
           name='avaliacao-diaria-detail'),
+     
+     path('diarias/<int:diaria_id>/cancelar', cancelar_diaria_view.CancelarDiariaID.as_view(), 
+          name='cancelar-diaria-detail'),
 
      path('usuarios/cidades-atendidas', cidades_atendimento_diarista_view.CidadesAtendimentoDiaristaID.as_view(),
           name='cidades-atendimento-diarista-detail'),
