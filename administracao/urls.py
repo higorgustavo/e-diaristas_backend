@@ -1,10 +1,12 @@
 from django.urls import path, include
 from django.urls.base import reverse_lazy
-from .views import servico_views, usuario_views
+from .views import servico_views, usuario_views, diaria_views
 from django.contrib.auth import views as auth_views
 
 
-urlpatterns = [   
+urlpatterns = [  
+    path('diarias/listar', diaria_views.lista_diarias, name='listar_diarias'),
+    path('diarias/<int:diaria_id>/transferir', diaria_views.transferir_pagamento_diaria, name='transferir_pagamento'),
     path('servicos/listar', servico_views.listar_servicos, name='listar_servicos'),
     path('servicos/cadastrar', servico_views.cadastrar_servico, name='cadastrar_servico'),
     path('servicos/editar/<int:id>', servico_views.editar_servico, name='editar_servico'),

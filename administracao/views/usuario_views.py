@@ -20,7 +20,7 @@ def cadastrar_usuario(request):
         form_usuario = CadastroUsuarioForm(request.POST)
         if form_usuario.is_valid():
             form_usuario.save()
-            return redirect('listar-usuarios')
+            return redirect('listar_usuarios')
     else:
         form_usuario = CadastroUsuarioForm()
 
@@ -30,6 +30,7 @@ def cadastrar_usuario(request):
     return render(request, "usuarios/form_usuario.html", context)
 
 
+
 @login_required
 def editar_usuario(request, id):
     User = get_user_model()
@@ -37,9 +38,24 @@ def editar_usuario(request, id):
     form_usuario = EditarUsuarioForm(request.POST or None, instance=usuario)
     if form_usuario.is_valid():
         form_usuario.save()
-        return redirect('listar-usuarios')
+        return redirect('listar_usuarios')
     else:
         context = {
             "form_usuario": form_usuario
         }
-    return render(request, "usuarios/editar_usuario.html", context)
+    return render(request, "usuarios/form_usuario.html", context)
+
+
+# @login_required
+# def editar_usuario(request, id):
+#     User = get_user_model()
+#     usuario = User.objects.get(id=id)
+#     form_usuario = EditarUsuarioForm(request.POST or None, instance=usuario)
+#     if form_usuario.is_valid():
+#         form_usuario.save()
+#         return redirect('listar-usuarios')
+#     else:
+#         context = {
+#             "form_usuario": form_usuario
+#         }
+#     return render(request, "usuarios/editar_usuario.html", context)

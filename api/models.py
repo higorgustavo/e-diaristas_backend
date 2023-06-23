@@ -38,7 +38,7 @@ class Usuario(AbstractUser):
     foto_usuario = models.ImageField(null=True, upload_to=nome_arquivo_foto, validators=[validate_image_file_extension, ])
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ('nome_completo', 'cpf', 'nascimento', 'telefone', 'tipo_usuario', 'reputacao', 'chave_pix', 'foto_documento', 'foto_documento')
+    REQUIRED_FIELDS = ('nome_completo', 'cpf', 'nascimento', 'telefone', 'tipo_usuario', 'reputacao', 'chave_pix', 'foto_documento', 'foto_usuario')
 
     object = UserManager()
 
