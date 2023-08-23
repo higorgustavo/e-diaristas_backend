@@ -19,7 +19,7 @@ def cadastrar_servico(request):
         form_servico = ServicoForm(request.POST)
         if form_servico.is_valid():
             form_servico.save()
-            return redirect('listar-servicos')
+            return redirect('listar_servicos')
     else:
         form_servico = ServicoForm()
 
@@ -36,7 +36,7 @@ def editar_servico(request, id):
     if form_servico.is_valid():
         servico = form_servico.save(commit=False)
         servico.save()
-        return redirect('listar-servicos')
+        return redirect('listar_servicos')
     else:
         context = {
             "form_servico": form_servico
